@@ -16,38 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { useArgs } from '@storybook/preview-api';
-import { Switch, SwitchProps } from '.';
+declare module 'dom-to-pdf' {
+  interface Image {
+    type: string;
+    quality: number;
+  }
 
-export default {
-  title: 'Switch',
-};
+  interface Options {
+    margin: number;
+    filename: string;
+    image: Image;
+    html2canvas: object;
+    excludeClassNames?: string[];
+  }
 
-export const InteractiveSwitch = ({ checked, ...rest }: SwitchProps) => {
-  const [, updateArgs] = useArgs();
-  return (
-    <Switch
-      {...rest}
-      checked={checked}
-      onChange={value => updateArgs({ checked: value })}
-    />
-  );
-};
-const defaultCheckedValue = true;
+  function domToPdf(elementToPrint: Element, options?: Options): Promise<any>;
 
-InteractiveSwitch.args = {
-  checked: defaultCheckedValue,
-  disabled: false,
-  loading: false,
-  title: 'Switch',
-  defaultChecked: defaultCheckedValue,
-  autoFocus: true,
-};
-
-InteractiveSwitch.argTypes = {
-  size: {
-    defaultValue: 'default',
-    control: { type: 'radio' },
-    options: ['small', 'default'],
-  },
-};
+  export default domToPdf;
+}
