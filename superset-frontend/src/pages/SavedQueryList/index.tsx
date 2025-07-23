@@ -58,6 +58,7 @@ import handleResourceExport from 'src/utils/export';
 import SubMenu, { ButtonProps, SubMenuProps } from 'src/features/home/SubMenu';
 import { commonMenuData } from 'src/features/home/commonMenuData';
 import { QueryObjectColumns, SavedQueryObject } from 'src/views/CRUD/types';
+import { TagTypeEnum } from 'src/components/Tag/TagType';
 import { loadTags } from 'src/components/Tag/utils';
 import { Icons } from '@superset-ui/core/components/Icons';
 import { UserWithPermissionsAndRoles } from 'src/types/bootstrapTypes';
@@ -393,7 +394,11 @@ function SavedQueryList({
           },
         }: any) => (
           // Only show custom type tags
-          <TagsList tags={tags.filter((tag: TagType) => tag.type === 1)} />
+          <TagsList
+            tags={tags.filter(
+              (tag: TagType) => tag.type === TagTypeEnum.Custom,
+            )}
+          />
         ),
         Header: t('Tags'),
         accessor: 'tags',
@@ -601,6 +606,7 @@ function SavedQueryList({
         onConfirm={handleBulkQueryDelete}
       >
         {confirmDelete => {
+          const enableBulkTag = isFeatureEnabled(FeatureFlag.TaggingSystem);
           const bulkActions: ListViewProps['bulkActions'] = [];
           if (canDelete) {
             bulkActions.push({
@@ -635,7 +641,7 @@ function SavedQueryList({
               bulkSelectEnabled={bulkSelectEnabled}
               disableBulkSelect={toggleBulkSelect}
               highlightRowId={savedQueryCurrentlyPreviewing?.id}
-              enableBulkTag
+              enableBulkTag={enableBulkTag}
               bulkTagResourceName="query"
               refreshData={refreshData}
             />
